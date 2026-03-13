@@ -1,0 +1,34 @@
+# GitHub Pages configuration
+# Repository: fomodejavu/historical-investment-scenarios
+
+title: "What If I Had Invested? | FomoDéjàVu Calculator"
+description: "Historical investment return calculator. See what $1,000 in Amazon, Apple, Tesla, Bitcoin or the S&P 500 would be worth today. Free educational tool by FomoDéjàVu."
+url: "https://fomodejavu.github.io"
+baseurl: "/historical-investment-scenarios"
+
+# Author
+author:
+  name: FomoDéjàVu
+  url: https://fomodejavu.com/
+
+# Social
+links:
+  - url: https://fomodejavu.com/
+    label: FomoDéjàVu Calculator
+
+# Plugins (GitHub Pages safe)
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+# SEO defaults
+lang: en
+
+# Build
+markdown: kramdown
+highlighter: rouge
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - node_modules

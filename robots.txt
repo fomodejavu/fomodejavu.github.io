@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://fomodejavu.github.io/historical-investment-scenarios/sitemap.xml
+
+# Canonical site
+# Full live calculator: https://fomodejavu.com/

@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ═══ SEO META ═══════════════════════════════════════════════════════════ -->
+<title>What If I Had Invested? | Historical Investment Return Calculator</title>
+<meta name="description" content="Calculate what any stock, ETF, or crypto investment would be worth today. Historical returns for Amazon, Apple, Tesla, Bitcoin, S&P 500 and more. Free investment FOMO calculator powered by FomoDéjàVu.">
+<meta name="keywords" content="what if I had invested, historical stock returns, investment calculator, FOMO calculator, Amazon IPO return, Bitcoin return calculator, S&P 500 historical return, compound interest calculator, stock return calculator, what would my investment be worth">
+<meta name="author" content="FomoDéjàVu">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://fomodejavu.github.io/historical-investment-scenarios/">
+
+<!-- ═══ OPEN GRAPH ══════════════════════════════════════════════════════════ -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="What If I Had Invested? | Historical Investment Return Calculator">
+<meta property="og:description" content="See what $1,000 in Amazon, Apple, Tesla, Bitcoin or the S&P 500 would be worth today. Free historical investment calculator with 24+ scenarios.">
+<meta property="og:url" content="https://fomodejavu.github.io/historical-investment-scenarios/">
+<meta property="og:site_name" content="FomoDéjàVu Historical Scenarios">
+<meta property="og:image" content="https://fomodejavu.com/og-image.png">
+
+<!-- ═══ TWITTER CARD ═══════════════════════════════════════════════════════ -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="What If I Had Invested? — Historical Return Calculator">
+<meta name="twitter:description" content="$1,000 in Amazon at IPO = $2M+. $1,000 in Apple on iPhone day = $43K. See what you missed — and what you can still do. Free calculator.">
+
+<!-- ═══ STRUCTURED DATA ════════════════════════════════════════════════════ -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Historical Investment Return Calculator",
+  "description": "Calculate historical investment returns for any stock, ETF, or cryptocurrency. See what a past investment would be worth today with splits and dividends accounted for.",
+  "url": "https://fomodejavu.github.io/historical-investment-scenarios/",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": {
+    "@type": "Organization",
+    "name": "FomoDéjàVu",
+    "url": "https://fomodejavu.com/"
+  },
+  "sameAs": [
+    "https://fomodejavu.com/",
+    "https://github.com/fomodejavu/historical-investment-scenarios"
+  ]
+}
+</script>
+
+<!-- ═══ FONTS ═══════════════════════════════════════════════════════════════ -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ═══════════════════════════════════════════════════════════════════════════
+   DESIGN: Financial data terminal × editorial magazine
+   Dark cream/paper background, ink-black type, amber data accents
+   Monospaced numbers, editorial serif headlines, razor-sharp layout
+═══════════════════════════════════════════════════════════════════════════ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --paper:   #f5f0e8;
+  --paper2:  #ede8df;
+  --ink:     #0e0d0b;
+  --ink2:    #2a2820;
+  --muted:   #7a7568;
+  --amber:   #c8820a;
+  --amber-l: #f0a830;
+  --green:   #1a6b3c;
+  --red:     #9b1c1c;
+  --border:  #c8c0b0;
+  --border2: #e0d8cc;
+
+  --f-display: 'Bebas Neue', sans-serif;
+  --f-serif:   'Instrument Serif', serif;
+  --f-mono:    'DM Mono', monospace;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--f-mono);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── Grain texture overlay ─────────────────────────────── */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.025'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0.4;
+}
+
+/* ── Layout ────────────────────────────────────────────── */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   MASTHEAD / HEADER
+═══════════════════════════════════════════════════════ */
+.masthead {
+  border-bottom: 3px solid var(--ink);
+  padding: 14px 0 12px;
+  animation: fadeDown 0.5s ease both;
+}
+
+.masthead-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.masthead-brand {
+  display: flex;
+  flex-direction: column;
+}
+
+.masthead-kicker {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.masthead-name {
+  font-family: var(--f-display);
+  font-size: clamp(28px, 5vw, 44px);
+  letter-spacing: 0.04em;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.masthead-name span { color: var(--amber); }
+
+.masthead-nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.masthead-nav a {
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.masthead-nav a:hover { color: var(--amber); }
+
+.masthead-nav .nav-cta {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 7px 14px;
+  border-radius: 3px;
+  font-weight: 500;
+  transition: background 0.15s, transform 0.15s;
+}
+
+.masthead-nav .nav-cta:hover {
+  background: var(--amber);
+  color: var(--ink);
+  transform: translateY(-1px);
+}
+
+/* ── Ticker tape ────────────────────────────────────────── */
+.ticker-wrap {
+  background: var(--ink);
+  color: var(--amber-l);
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  padding: 7px 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.ticker-inner {
+  display: flex;
+  gap: 0;
+  animation: tickerScroll 40s linear infinite;
+  white-space: nowrap;
+}
+
+.ticker-item {
+  padding: 0 32px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ticker-item .t-ticker { color: #f5f0e8; opacity: 0.6; }
+.ticker-item .t-return { color: var(--amber-l); }
+.ticker-item .t-sep { color: rgba(255,255,255,0.15); }
+
+@keyframes tickerScroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ═══════════════════════════════════════════════════════
+   HERO
+═══════════════════════════════════════════════════════ */
+.hero {
+  padding: 60px 0 48px;
+  border-bottom: 1px solid var(--border);
+  animation: fadeUp 0.6s 0.1s ease both;
+}
+
+.hero-layout {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 48px;
+  align-items: start;
+}
+
+.hero-eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hero-eyebrow::before {
+  content: '';
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--amber);
+}
+
+.hero-headline {
+  font-family: var(--f-display);
+  font-size: clamp(52px, 8vw, 96px);
+  line-height: 0.92;
+  letter-spacing: 0.02em;
+  margin-bottom: 24px;
+  color: var(--ink);
+}
+
+.hero-headline em {
+  font-style: italic;
+  font-family: var(--f-serif);
+  color: var(--amber);
+}
+
+.hero-sub {
+  font-family: var(--f-serif);
+  font-size: 18px;
+  color: var(--ink2);
+  line-height: 1.6;
+  max-width: 480px;
+  margin-bottom: 28px;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.hero-stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-stat-num {
+  font-family: var(--f-display);
+  font-size: 32px;
+  color: var(--ink);
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+
+.hero-stat-num.pos { color: var(--green); }
+
+.hero-stat-label {
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 3px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   CALCULATOR CARD
+═══════════════════════════════════════════════════════ */
+.calc-card {
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 4px;
+  padding: 32px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 8px 8px 0 var(--amber);
+}
+
+.calc-card::before {
+  content: 'CALCULATOR';
+  position: absolute;
+  top: 16px; right: 20px;
+  font-family: var(--f-mono);
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  color: rgba(245,240,232,0.2);
+}
+
+.calc-title {
+  font-family: var(--f-display);
+  font-size: 22px;
+  letter-spacing: 0.08em;
+  margin-bottom: 22px;
+  color: var(--amber-l);
+}
+
+.calc-field {
+  margin-bottom: 16px;
+}
+
+.calc-label {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(245,240,232,0.45);
+  margin-bottom: 7px;
+  display: block;
+}
+
+.calc-input, .calc-select {
+  width: 100%;
+  background: rgba(245,240,232,0.07);
+  border: 1px solid rgba(245,240,232,0.15);
+  color: var(--paper);
+  font-family: var(--f-mono);
+  font-size: 15px;
+  font-weight: 500;
+  padding: 11px 14px;
+  border-radius: 3px;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+  -webkit-appearance: none;
+}
+
+.calc-input:focus, .calc-select:focus {
+  border-color: var(--amber-l);
+  background: rgba(245,240,232,0.1);
+}
+
+.calc-select option { background: #1a1a12; color: var(--paper); }
+
+.calc-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.calc-toggles {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.calc-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: rgba(245,240,232,0.55);
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.15s;
+}
+
+.calc-toggle:hover { color: var(--paper); }
+.calc-toggle input { display: none; }
+
+.tog-box {
+  width: 14px; height: 14px;
+  border: 1px solid rgba(245,240,232,0.3);
+  border-radius: 2px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+
+.calc-toggle input:checked + .tog-box {
+  background: var(--amber-l);
+  border-color: var(--amber-l);
+}
+
+.calc-toggle input:checked + .tog-box::after {
+  content: '✓';
+  font-size: 9px;
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.calc-btn {
+  width: 100%;
+  background: var(--amber-l);
+  color: var(--ink);
+  font-family: var(--f-display);
+  font-size: 20px;
+  letter-spacing: 0.1em;
+  border: none;
+  padding: 14px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 16px;
+}
+
+.calc-btn:hover {
+  background: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(200,130,10,0.4);
+}
+
+/* ── Result panel ─────────────────────────────────────── */
+.calc-result {
+  display: none;
+  border-top: 1px solid rgba(245,240,232,0.12);
+  padding-top: 16px;
+  animation: resultIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+
+.calc-result.show { display: block; }
+
+.result-label {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(245,240,232,0.4);
+  margin-bottom: 4px;
+}
+
+.result-big {
+  font-family: var(--f-display);
+  font-size: clamp(36px, 8vw, 56px);
+  letter-spacing: 0.04em;
+  color: var(--amber-l);
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.result-big.loss { color: #f87171; }
+
+.result-context {
+  font-size: 11px;
+  color: rgba(245,240,232,0.45);
+  margin-bottom: 16px;
+}
+
+.result-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.r-stat {
+  background: rgba(245,240,232,0.05);
+  border: 1px solid rgba(245,240,232,0.1);
+  border-radius: 3px;
+  padding: 10px 12px;
+  text-align: center;
+}
+
+.r-stat-l { font-size: 8px; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(245,240,232,0.4); margin-bottom: 4px; }
+.r-stat-v { font-family: var(--f-mono); font-size: 14px; font-weight: 500; color: var(--paper); }
+.r-stat-v.pos { color: #6ee7b7; }
+.r-stat-v.neg { color: #f87171; }
+
+/* Progress bar */
+.r-bar { height: 3px; background: rgba(245,240,232,0.1); border-radius: 2px; overflow: hidden; margin-bottom: 14px; }
+.r-bar-fill { height: 100%; background: linear-gradient(90deg, var(--amber), var(--amber-l)); border-radius: 2px; transition: width 1s cubic-bezier(0.16,1,0.3,1); width: 0; }
+
+.r-note {
+  font-size: 11px;
+  color: rgba(240,168,48,0.7);
+  line-height: 1.5;
+  padding: 10px 12px;
+  background: rgba(240,168,48,0.07);
+  border-left: 2px solid rgba(240,168,48,0.3);
+  border-radius: 0 3px 3px 0;
+  margin-bottom: 14px;
+}
+
+.r-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 14px;
+  background: rgba(245,240,232,0.06);
+  border: 1px solid rgba(245,240,232,0.12);
+  border-radius: 3px;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.r-cta:hover {
+  background: rgba(240,168,48,0.1);
+  border-color: rgba(240,168,48,0.3);
+}
+
+.r-cta-text { font-size: 12px; color: var(--amber-l); font-weight: 500; }
+.r-cta-sub  { font-size: 10px; color: rgba(245,240,232,0.35); margin-top: 1px; }
+.r-cta-arr  { color: var(--amber-l); font-size: 16px; }
+
+/* ═══════════════════════════════════════════════════════
+   SCENARIO CARDS SECTION
+═══════════════════════════════════════════════════════ */
+.section {
+  padding: 56px 0;
+  border-bottom: 1px solid var(--border);
+  animation: fadeUp 0.6s ease both;
+}
+
+.section-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 32px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.section-title {
+  font-family: var(--f-display);
+  font-size: clamp(32px, 5vw, 52px);
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  line-height: 1;
+}
+
+.section-title span { color: var(--amber); }
+
+.section-link {
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--amber);
+  text-decoration: none;
+  border-bottom: 1px solid var(--amber);
+  padding-bottom: 1px;
+  white-space: nowrap;
+  transition: opacity 0.15s;
+}
+
+.section-link:hover { opacity: 0.7; }
+
+/* ── Filter tabs ─────────────────────────────────────── */
+.filter-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 28px;
+  border-bottom: 2px solid var(--border);
+  overflow-x: auto;
+  padding-bottom: 0;
+  scrollbar-width: none;
+}
+
+.filter-tabs::-webkit-scrollbar { display: none; }
+
+.tab-btn {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 9px 18px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.tab-btn:hover { color: var(--ink); }
+.tab-btn.active { color: var(--amber); border-bottom-color: var(--amber); }
+
+/* ── Scenario grid ───────────────────────────────────── */
+.scenarios-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2px;
+}
+
+.scenario-card {
+  background: var(--paper2);
+  border: 1px solid var(--border);
+  padding: 24px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+  display: none;
+}
+
+.scenario-card.visible { display: block; }
+
+.scenario-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--border);
+  transition: background 0.2s;
+}
+
+.scenario-card:hover {
+  background: var(--paper);
+  box-shadow: 4px 4px 0 var(--border);
+  z-index: 1;
+  transform: translate(-1px, -1px);
+}
+
+.scenario-card:hover::before { background: var(--amber); }
+
+.sc-asset-type {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.sc-title {
+  font-family: var(--f-serif);
+  font-size: 16px;
+  line-height: 1.35;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+
+.sc-divider {
+  height: 1px;
+  background: var(--border);
+  margin-bottom: 14px;
+}
+
+.sc-data {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.sc-main-val {
+  display: flex;
+  flex-direction: column;
+}
+
+.sc-val-label {
+  font-size: 8px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 3px;
+}
+
+.sc-val-num {
+  font-family: var(--f-display);
+  font-size: 28px;
+  letter-spacing: 0.04em;
+  color: var(--green);
+  line-height: 1;
+}
+
+.sc-val-num.loss { color: var(--red); }
+.sc-val-num.crypto { color: var(--amber); }
+
+.sc-meta {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sc-pill {
+  display: inline-block;
+  font-size: 10px;
+  font-family: var(--f-mono);
+  padding: 3px 8px;
+  border-radius: 2px;
+  background: rgba(26,107,60,0.1);
+  color: var(--green);
+  border: 1px solid rgba(26,107,60,0.2);
+}
+
+.sc-pill.loss { background: rgba(155,28,28,0.1); color: var(--red); border-color: rgba(155,28,28,0.2); }
+.sc-pill.crypto { background: rgba(200,130,10,0.1); color: var(--amber); border-color: rgba(200,130,10,0.2); }
+
+.sc-cagr {
+  font-size: 11px;
+  color: var(--muted);
+  font-family: var(--f-mono);
+}
+
+/* ── Click-to-load ────────────────────────────────────── */
+.scenario-card[data-clickable="true"]:hover .sc-title::after {
+  content: ' →';
+  color: var(--amber);
+}
+
+/* ═══════════════════════════════════════════════════════
+   METHODOLOGY CALLOUT
+═══════════════════════════════════════════════════════ */
+.methodology-strip {
+  background: var(--ink2);
+  color: var(--paper);
+  padding: 40px 0;
+  margin: 0;
+}
+
+.method-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.method-item {}
+
+.method-icon {
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+.method-title {
+  font-family: var(--f-display);
+  font-size: 16px;
+  letter-spacing: 0.08em;
+  color: var(--amber-l);
+  margin-bottom: 6px;
+}
+
+.method-desc {
+  font-size: 11px;
+  color: rgba(245,240,232,0.55);
+  line-height: 1.6;
+}
+
+/* ═══════════════════════════════════════════════════════
+   EDUCATIONAL SECTION
+═══════════════════════════════════════════════════════ */
+.edu-section {
+  padding: 56px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.edu-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.edu-headline {
+  font-family: var(--f-display);
+  font-size: clamp(36px, 5vw, 56px);
+  letter-spacing: 0.04em;
+  line-height: 0.95;
+  margin-bottom: 20px;
+  color: var(--ink);
+}
+
+.edu-headline span {
+  font-family: var(--f-serif);
+  font-style: italic;
+  color: var(--amber);
+}
+
+.edu-body {
+  font-family: var(--f-serif);
+  font-size: 17px;
+  color: var(--ink2);
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+
+.edu-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--amber);
+  text-decoration: none;
+  border-bottom: 1px solid var(--amber);
+  padding-bottom: 2px;
+  transition: opacity 0.15s;
+}
+
+.edu-link:hover { opacity: 0.7; }
+
+/* Compounding table */
+.compound-table {
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.ct-header {
+  background: var(--ink);
+  color: var(--paper);
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding: 10px 16px;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(245,240,232,0.5);
+}
+
+.ct-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border2);
+  font-size: 13px;
+  transition: background 0.15s;
+}
+
+.ct-row:last-child { border-bottom: none; }
+.ct-row:hover { background: var(--paper2); }
+.ct-row .year { font-family: var(--f-mono); color: var(--muted); }
+.ct-row .val  { font-family: var(--f-mono); font-weight: 500; color: var(--green); }
+.ct-row .gain { font-family: var(--f-mono); font-size: 12px; color: var(--amber); }
+
+/* ═══════════════════════════════════════════════════════
+   DATA DOWNLOAD STRIP
+═══════════════════════════════════════════════════════ */
+.data-strip {
+  background: var(--paper2);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 32px 0;
+}
+
+.data-strip-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.data-strip-text {}
+
+.data-strip-eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.data-strip-title {
+  font-family: var(--f-display);
+  font-size: 22px;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+}
+
+.data-strip-links {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.dl-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 3px;
+  font-family: var(--f-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  transition: all 0.2s;
+  border: 1px solid var(--border);
+  color: var(--ink);
+  background: var(--paper);
+}
+
+.dl-btn:hover {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+  transform: translateY(-2px);
+}
+
+.dl-btn.primary {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+
+.dl-btn.primary:hover {
+  background: var(--amber);
+  color: var(--ink);
+  border-color: var(--amber);
+}
+
+/* ═══════════════════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════════════════ */
+.footer {
+  padding: 40px 0 32px;
+  border-top: 3px solid var(--ink);
+}
+
+.footer-inner {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 32px;
+}
+
+.footer-brand .brand-name {
+  font-family: var(--f-display);
+  font-size: 28px;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+
+.footer-brand .brand-name span { color: var(--amber); }
+
+.footer-brand p {
+  font-family: var(--f-serif);
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.6;
+  max-width: 320px;
+  margin-bottom: 16px;
+}
+
+.footer-brand a {
+  color: var(--amber);
+  text-decoration: none;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  border-bottom: 1px solid var(--amber);
+  padding-bottom: 1px;
+}
+
+.footer-col-title {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin-bottom: 14px;
+  font-weight: 500;
+}
+
+.footer-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footer-links li a {
+  font-size: 13px;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.footer-links li a:hover { color: var(--amber); }
+
+.footer-bottom {
+  border-top: 1px solid var(--border);
+  padding-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.footer-legal {
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.6;
+  max-width: 600px;
+}
+
+.footer-legal a { color: var(--amber); text-decoration: none; }
+
+/* ═══════════════════════════════════════════════════════
+   ANIMATIONS
+═══════════════════════════════════════════════════════ */
+@keyframes fadeDown { from { opacity:0; transform:translateY(-12px); } to { opacity:1; transform:translateY(0); } }
+@keyframes fadeUp   { from { opacity:0; transform:translateY(16px);  } to { opacity:1; transform:translateY(0); } }
+@keyframes resultIn { from { opacity:0; transform:scale(0.96) translateY(8px); } to { opacity:1; transform:scale(1) translateY(0); } }
+
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════════════ */
+@media (max-width: 800px) {
+  .hero-layout { grid-template-columns: 1fr; }
+  .method-inner { grid-template-columns: 1fr 1fr; }
+  .edu-grid { grid-template-columns: 1fr; }
+  .footer-inner { grid-template-columns: 1fr 1fr; }
+  .result-grid { grid-template-columns: 1fr 1fr; }
+  .masthead-nav { display: none; }
+}
+
+@media (max-width: 520px) {
+  .method-inner { grid-template-columns: 1fr 1fr; gap: 16px; }
+  .footer-inner { grid-template-columns: 1fr; }
+  .calc-row { grid-template-columns: 1fr; }
+  .data-strip-inner { flex-direction: column; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════
+     MASTHEAD
+═══════════════════════════════════════════════════ -->
+<header class="masthead">
+  <div class="container">
+    <div class="masthead-inner">
+      <div class="masthead-brand">
+        <span class="masthead-kicker">Historical Investment Returns</span>
+        <div class="masthead-name">Fomo<span>Déjà</span>Vu</div>
+      </div>
+      <nav class="masthead-nav">
+        <a href="#calculator">Calculator</a>
+        <a href="#scenarios">Scenarios</a>
+        <a href="https://github.com/fomodejavu/historical-investment-scenarios" target="_blank" rel="noopener">Dataset</a>
+        <a href="https://fomodejavu.com/methodology/" target="_blank" rel="noopener">Methodology</a>
+        <a href="https://fomodejavu.com/" target="_blank" rel="noopener" class="nav-cta">Live Calculator ↗</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════════
+     TICKER TAPE
+═══════════════════════════════════════════════════ -->
+<div class="ticker-wrap" aria-hidden="true">
+  <div class="ticker-inner" id="ticker">
+    <!-- duplicated for seamless loop -->
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     HERO
+═══════════════════════════════════════════════════ -->
+<section class="hero" id="calculator">
+  <div class="container">
+    <div class="hero-layout">
+      <div class="hero-copy">
+        <div class="hero-eyebrow">Investment FOMO Calculator</div>
+        <h1 class="hero-headline">What if<br>you had<br><em>invested?</em></h1>
+        <p class="hero-sub">
+          See what any stock, ETF, or crypto investment would be worth today — with splits, dividends, and inflation all accounted for. 24+ historically significant scenarios.
+        </p>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <span class="hero-stat-num">24+</span>
+            <span class="hero-stat-label">Scenarios</span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat-num pos">204,900%</span>
+            <span class="hero-stat-label">Amazon IPO return</span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat-num">Free</span>
+            <span class="hero-stat-label">Always open</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CALCULATOR -->
+      <div class="calc-card">
+        <div class="calc-title">RUN A SCENARIO</div>
+
+        <div class="calc-field">
+          <label class="calc-label" for="c-asset">Asset</label>
+          <select id="c-asset" class="calc-select">
+            <optgroup label="── Stocks ──────────">
+              <option value="AMZN|1997-05-15|2050000|37.8|204900|27|false|Amazon IPO (1997)">Amazon — IPO Day 1997</option>
+              <option value="AAPL|2007-01-09|43000|23.9|4200|18|true|Apple iPhone Launch 2007">Apple — iPhone Launch 2007</option>
+              <option value="NVDA|2015-01-02|108000|49.8|10700|10|true|NVIDIA Pre-AI Era 2015">NVIDIA — Pre-AI Era 2015</option>
+              <option value="TSLA|2012-01-03|50000|33.8|4900|13|false|Tesla Post-IPO 2012">Tesla — Post-IPO Dip 2012</option>
+              <option value="MSFT|2014-02-04|19000|29.2|1800|11|true|Microsoft Nadella Day 2014">Microsoft — Nadella Day 2014</option>
+              <option value="GOOGL|2004-08-19|78000|23.7|7700|21|false|Google IPO 2004">Google — IPO Day 2004</option>
+              <option value="META|2012-05-18|15200|22.6|1420|13|false|Facebook IPO 2012">Meta — Facebook IPO 2012</option>
+              <option value="NFLX|2012-01-03|21000|24.8|2000|13|false|Netflix Post-Qwikster 2012">Netflix — Post-Qwikster 2012</option>
+            </optgroup>
+            <optgroup label="── ETFs ─────────────">
+              <option value="SPY|2009-03-09|9800|15.9|880|16|true|S&P 500 2009 Bottom">S&P 500 — 2009 Market Bottom</option>
+              <option value="SPY|2000-01-03|5400|8.2|440|25|true|S&P 500 Dot-Com Peak 2000">S&P 500 — Dot-Com Peak 2000</option>
+              <option value="QQQ|2003-01-02|25000|14.7|2400|22|true|NASDAQ Post Dot-Com 2003">NASDAQ-100 — Post Dot-Com 2003</option>
+              <option value="VTI|2004-01-02|9500|11.9|850|21|true|Total Market 2004">Total Market (VTI) — 2004</option>
+            </optgroup>
+            <optgroup label="── Crypto ───────────">
+              <option value="BTC|2016-07-10|150000|83.7|14900|9|false|Bitcoin Halving 2016">Bitcoin — 2nd Halving 2016</option>
+              <option value="BTC|2020-01-01|13500|68.2|1250|5|false|Bitcoin 2020">Bitcoin — Pre Bull Run 2020</option>
+              <option value="ETH|2015-08-07|1150000|122|114900|10|false|Ethereum Launch 2015">Ethereum — Launch Day 2015</option>
+            </optgroup>
+          </select>
+        </div>
+
+        <div class="calc-row">
+          <div class="calc-field">
+            <label class="calc-label" for="c-amount">Amount Invested</label>
+            <input type="number" id="c-amount" class="calc-input" value="1000" min="1" max="10000000" placeholder="1000">
+          </div>
+          <div class="calc-field">
+            <label class="calc-label" for="c-currency">Currency</label>
+            <select id="c-currency" class="calc-select">
+              <option value="USD" selected>USD $</option>
+              <option value="GBP">GBP £</option>
+              <option value="EUR">EUR €</option>
+              <option value="CAD">CAD $</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="calc-toggles">
+          <label class="calc-toggle">
+            <input type="checkbox" id="c-drip">
+            <span class="tog-box"></span>
+            Reinvest dividends (DRIP)
+          </label>
+          <label class="calc-toggle">
+            <input type="checkbox" id="c-inflation">
+            <span class="tog-box"></span>
+            Adjust for inflation
+          </label>
+        </div>
+
+        <button class="calc-btn" onclick="runCalc()">CALCULATE RETURN</button>
+
+        <div class="calc-result" id="calc-result">
+          <div class="result-label" id="r-label">Your $1,000 in AMZN · May 1997</div>
+          <div class="result-big" id="r-value">$2,050,000</div>
+          <div class="result-context" id="r-context">would be worth today</div>
+          <div class="r-bar"><div class="r-bar-fill" id="r-bar"></div></div>
+          <div class="result-grid">
+            <div class="r-stat">
+              <div class="r-stat-l">Total Return</div>
+              <div class="r-stat-v pos" id="r-return">+204,900%</div>
+            </div>
+            <div class="r-stat">
+              <div class="r-stat-l">CAGR</div>
+              <div class="r-stat-v pos" id="r-cagr">37.8%/yr</div>
+            </div>
+            <div class="r-stat">
+              <div class="r-stat-l">Years Held</div>
+              <div class="r-stat-v" id="r-years">27 yrs</div>
+            </div>
+          </div>
+          <div class="r-note" id="r-note"></div>
+          <a class="r-cta" id="r-cta" href="https://fomodejavu.com/" target="_blank" rel="noopener">
+            <div>
+              <div class="r-cta-text">Get real-time data & custom dates →</div>
+              <div class="r-cta-sub">Live calculator at fomodejavu.com</div>
+            </div>
+            <div class="r-cta-arr">↗</div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     SCENARIO CARDS
+═══════════════════════════════════════════════════ -->
+<section class="section" id="scenarios">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">All <span>Scenarios</span></h2>
+      <a href="https://github.com/fomodejavu/historical-investment-scenarios" target="_blank" rel="noopener" class="section-link">Download dataset →</a>
+    </div>
+
+    <div class="filter-tabs">
+      <button class="tab-btn active" onclick="filterCards('all', this)">All</button>
+      <button class="tab-btn" onclick="filterCards('stock', this)">Stocks</button>
+      <button class="tab-btn" onclick="filterCards('etf', this)">ETFs</button>
+      <button class="tab-btn" onclick="filterCards('crypto', this)">Crypto</button>
+      <button class="tab-btn" onclick="filterCards('dividend', this)">Dividends</button>
+      <button class="tab-btn" onclick="filterCards('annual', this)">Annual / DCA</button>
+      <button class="tab-btn" onclick="filterCards('inflation', this)">Inflation</button>
+    </div>
+
+    <div class="scenarios-grid" id="scenarios-grid">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     METHODOLOGY STRIP
+═══════════════════════════════════════════════════ -->
+<div class="methodology-strip">
+  <div class="container">
+    <div class="method-inner">
+      <div class="method-item">
+        <div class="method-icon">📊</div>
+        <div class="method-title">SPLIT-ADJUSTED</div>
+        <div class="method-desc">All stock splits retroactively applied. Amazon's 240× split multiplier is fully accounted for in every scenario.</div>
+      </div>
+      <div class="method-item">
+        <div class="method-icon">💰</div>
+        <div class="method-title">DRIP INCLUDED</div>
+        <div class="method-desc">Dividend reinvestment tracked quarterly. Each dividend buys fractional new shares that compound forward.</div>
+      </div>
+      <div class="method-item">
+        <div class="method-icon">📉</div>
+        <div class="method-title">DRAWDOWNS SHOWN</div>
+        <div class="method-desc">Every scenario documents the maximum drawdown endured. The journey matters as much as the destination.</div>
+      </div>
+      <div class="method-item">
+        <div class="method-icon">🔬</div>
+        <div class="method-title">FULL METHODOLOGY</div>
+        <div class="method-desc">Complete data sources, assumptions, and limitations documented openly at <a href="https://fomodejavu.com/methodology/" target="_blank" rel="noopener" style="color:var(--amber-l);text-decoration:none;">fomodejavu.com/methodology</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     EDUCATIONAL SECTION
+═══════════════════════════════════════════════════ -->
+<section class="edu-section">
+  <div class="container">
+    <div class="edu-grid">
+      <div class="edu-copy">
+        <h2 class="edu-headline">The power of<br><span>compounding</span><br>over time</h2>
+        <p class="edu-body">
+          Time in the market beats timing the market. A single consistent investment, held patiently, grows geometrically — not linearly. The table shows $1,000 growing at the S&P 500's historical ~10% average annual return.
+        </p>
+        <p class="edu-body">
+          The uncomfortable truth: most of the final wealth is created in the last few years, not the first. This is why starting early is the single most powerful investing decision you can make.
+        </p>
+        <a href="https://fomodejavu.com/" target="_blank" rel="noopener" class="edu-link">
+          Explore all calculators ↗
+        </a>
+      </div>
+
+      <div class="compound-table">
+        <div class="ct-header">
+          <span>Year</span>
+          <span>Value (10% CAGR)</span>
+          <span>Total Gain</span>
+        </div>
+        <div class="ct-row"><span class="year">Year 1</span><span class="val">$1,100</span><span class="gain">+10%</span></div>
+        <div class="ct-row"><span class="year">Year 5</span><span class="val">$1,611</span><span class="gain">+61%</span></div>
+        <div class="ct-row"><span class="year">Year 10</span><span class="val">$2,594</span><span class="gain">+159%</span></div>
+        <div class="ct-row"><span class="year">Year 15</span><span class="val">$4,177</span><span class="gain">+318%</span></div>
+        <div class="ct-row"><span class="year">Year 20</span><span class="val">$6,727</span><span class="gain">+573%</span></div>
+        <div class="ct-row"><span class="year">Year 25</span><span class="val">$10,835</span><span class="gain">+984%</span></div>
+        <div class="ct-row"><span class="year">Year 30</span><span class="val">$17,449</span><span class="gain">+1,645%</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     DATA DOWNLOAD STRIP
+═══════════════════════════════════════════════════ -->
+<div class="data-strip">
+  <div class="container">
+    <div class="data-strip-inner">
+      <div class="data-strip-text">
+        <div class="data-strip-eyebrow">Open Educational Dataset</div>
+        <div class="data-strip-title">24 Scenarios · JSON + CSV · MIT License</div>
+      </div>
+      <div class="data-strip-links">
+        <a href="https://github.com/fomodejavu/historical-investment-scenarios" target="_blank" rel="noopener" class="dl-btn primary">
+          ⭐ Star on GitHub
+        </a>
+        <a href="https://github.com/fomodejavu/historical-investment-scenarios/raw/main/data/scenarios-master.csv" target="_blank" rel="noopener" class="dl-btn">
+          ↓ Download CSV
+        </a>
+        <a href="https://github.com/fomodejavu/historical-investment-scenarios/raw/main/data/scenarios-master.json" target="_blank" rel="noopener" class="dl-btn">
+          ↓ Download JSON
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="brand-name">Fomo<span>Déjà</span>Vu</div>
+        <p>Educational tools for understanding historical investment returns, compounding, opportunity cost, and long-term market behavior. No ads, no sign-up, no financial advice.</p>
+        <a href="https://fomodejavu.com/" target="_blank" rel="noopener">Visit fomodejavu.com →</a>
+      </div>
+      <div>
+        <div class="footer-col-title">Calculators</div>
+        <ul class="footer-links">
+          <li><a href="https://fomodejavu.com/" target="_blank" rel="noopener">Stock Return Calculator</a></li>
+          <li><a href="https://fomodejavu.com/" target="_blank" rel="noopener">Crypto Return Calculator</a></li>
+          <li><a href="https://fomodejavu.com/" target="_blank" rel="noopener">Dividend DRIP Calculator</a></li>
+          <li><a href="https://fomodejavu.com/" target="_blank" rel="noopener">Inflation Calculator</a></li>
+          <li><a href="https://fomodejavu.com/" target="_blank" rel="noopener">Missed Investment (FOMO)</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Resources</div>
+        <ul class="footer-links">
+          <li><a href="https://fomodejavu.com/methodology/" target="_blank" rel="noopener">Methodology</a></li>
+          <li><a href="https://github.com/fomodejavu/historical-investment-scenarios" target="_blank" rel="noopener">Open Dataset (GitHub)</a></li>
+          <li><a href="https://github.com/fomodejavu/historical-investment-scenarios/tree/main/notebooks" target="_blank" rel="noopener">Jupyter Notebooks</a></li>
+          <li><a href="https://github.com/fomodejavu/historical-investment-scenarios/blob/main/widgets/what-if-widget.html" target="_blank" rel="noopener">Embeddable Widget</a></li>
+          <li><a href="https://fomodejavu.com/blog" target="_blank" rel="noopener">Blog &amp; Case Studies</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-legal">
+        <strong>Educational use only. Not financial advice.</strong> All scenarios use historical data for educational purposes. Past performance is not indicative of future results. Always consult a licensed financial professional.<br>
+        Data &amp; methodology: <a href="https://fomodejavu.com/methodology/" target="_blank" rel="noopener">fomodejavu.com/methodology</a> ·
+        Open dataset: <a href="https://github.com/fomodejavu/historical-investment-scenarios" target="_blank" rel="noopener">github.com/fomodejavu/historical-investment-scenarios</a>
+      </div>
+      <div style="font-size:11px;color:var(--muted);font-family:var(--f-mono);">
+        © 2025 FomoDéjàVu
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════════════ -->
+<script>
+// ── Scenario dataset ──────────────────────────────────────────────────────
+const SCENARIOS = [
+  { id:'amzn-ipo', ticker:'AMZN', title:'$1,000 in Amazon at IPO', subtitle:'May 15, 1997', type:'stock', date:'1997-05-15', invested:1000, value:2050000, cagr:37.8, ret:204900, years:27, drip:false, note:"Four splits turned 510 shares into 122,448. Required holding through a 95% crash in 2001.", tags:['stock'] },
+  { id:'aapl-iphone', ticker:'AAPL', title:'$1,000 in Apple — iPhone Day', subtitle:'Jan 9, 2007', type:'stock', date:'2007-01-09', invested:1000, value:43000, cagr:23.9, ret:4200, years:18, drip:true, note:"Two splits (7:1 and 4:1) turned 83 shares into 2,338. Dividends reinvested from 2012.", tags:['stock'] },
+  { id:'nvda-2015', ticker:'NVDA', title:'$1,000 in NVIDIA', subtitle:'Jan 2, 2015', type:'stock', date:'2015-01-02', invested:1000, value:108000, cagr:49.8, ret:10700, years:10, drip:true, note:"NVIDIA transformed from gaming GPUs to AI infrastructure. Two splits produced a 40× share multiplier.", tags:['stock'] },
+  { id:'tsla-2012', ticker:'TSLA', title:'$1,000 in Tesla', subtitle:'Jan 3, 2012', type:'stock', date:'2012-01-03', invested:1000, value:50000, cagr:33.8, ret:4900, years:13, drip:false, note:"Two splits turned 158 shares into 2,370. Tesla was near bankruptcy multiple times in 2012.", tags:['stock'] },
+  { id:'msft-2014', ticker:'MSFT', title:'$1,000 in Microsoft — Nadella Day', subtitle:'Feb 4, 2014', type:'stock', date:'2014-02-04', invested:1000, value:19000, cagr:29.2, ret:1800, years:11, drip:true, note:"No splits — all return from price appreciation and DRIP dividends. Azure grew from near zero.", tags:['stock'] },
+  { id:'googl-ipo', ticker:'GOOGL', title:'$1,000 in Google at IPO', subtitle:'Aug 19, 2004', type:'stock', date:'2004-08-19', invested:1000, value:78000, cagr:23.7, ret:7700, years:21, drip:false, note:"Dutch auction IPO gave retail investors equal access to institutional pricing at $85.", tags:['stock'] },
+  { id:'meta-ipo', ticker:'META', title:'$1,000 in Meta at IPO', subtitle:'May 18, 2012', type:'stock', date:'2012-05-18', invested:1000, value:15200, cagr:22.6, ret:1420, years:13, drip:false, note:"The 'failed IPO' dropped 53% in 90 days. Investors who held through recovered fully.", tags:['stock'] },
+  { id:'nflx-2012', ticker:'NFLX', title:'$1,000 in Netflix', subtitle:'Jan 3, 2012', type:'stock', date:'2012-01-03', invested:1000, value:21000, cagr:24.8, ret:2000, years:13, drip:false, note:"Bought at the Qwikster crisis bottom, when Netflix had lost 800K subscribers.", tags:['stock'] },
+  { id:'spy-2009', ticker:'SPY', title:'$1,000 in S&P 500 — 2009 Bottom', subtitle:'Mar 9, 2009', type:'etf', date:'2009-03-09', invested:1000, value:9800, cagr:15.9, ret:880, years:16, drip:true, note:"Nobody knew it was the bottom. Headlines were catastrophic. Banks were being nationalized.", tags:['etf'] },
+  { id:'spy-2000', ticker:'SPY', title:'$1,000 in S&P 500 — Worst Timing', subtitle:'Jan 3, 2000', type:'etf', date:'2000-01-03', invested:1000, value:5400, cagr:8.2, ret:440, years:25, drip:true, note:"Buying at the dot-com peak — worst possible timing — still returned 5× over 25 years.", tags:['etf'] },
+  { id:'qqq-2003', ticker:'QQQ', title:'$1,000 in NASDAQ-100 Post-Crash', subtitle:'Jan 2, 2003', type:'etf', date:'2003-01-02', invested:1000, value:25000, cagr:14.7, ret:2400, years:22, drip:true, note:"After an 80% crash from the dot-com peak. Survivors became global tech dominators.", tags:['etf'] },
+  { id:'vti-2004', ticker:'VTI', title:'$1,000 Total Market — 21 Years', subtitle:'Jan 2, 2004', type:'etf', date:'2004-01-02', invested:1000, value:9500, cagr:11.9, ret:850, years:21, drip:true, note:"The boring benchmark: own everything, rebalance nothing. ~12% CAGR without any stock picking.", tags:['etf'] },
+  { id:'btc-2016', ticker:'BTC', title:'$1,000 in Bitcoin — 2nd Halving', subtitle:'Jul 10, 2016', type:'crypto', date:'2016-07-10', invested:1000, value:150000, cagr:83.7, ret:14900, years:9, drip:false, note:"One day after Bitcoin's second block reward halving. An 83% crash followed in 2018.", tags:['crypto'] },
+  { id:'btc-2020', ticker:'BTC', title:'$1,000 in Bitcoin — Pre Bull Run', subtitle:'Jan 1, 2020', type:'crypto', date:'2020-01-01', invested:1000, value:13500, cagr:68.2, ret:1250, years:5, drip:false, note:"Bitcoin fell 50% in the March 2020 COVID crash, then rose to $69K by November 2021.", tags:['crypto'] },
+  { id:'eth-2015', ticker:'ETH', title:'$1,000 in Ethereum at Launch', subtitle:'Aug 7, 2015', type:'crypto', date:'2015-08-07', invested:1000, value:1150000, cagr:122, ret:114900, years:10, drip:false, note:"Ethereum pioneered smart contracts. A 95% crash in 2018 tested every holder's resolve.", tags:['crypto'] },
+  { id:'jnj-drip', ticker:'JNJ', title:'$10,000 in Johnson & Johnson', subtitle:'Jan 2, 2004 · DRIP', type:'dividend', date:'2004-01-02', invested:10000, value:85000, cagr:11.1, ret:750, years:21, drip:true, note:"62+ consecutive years of dividend growth. DRIP contributed 27% of total return. Yield-on-cost reached 9.2%.", tags:['dividend','stock'] },
+  { id:'ko-drip', ticker:'KO', title:'$10,000 in Coca-Cola', subtitle:'Jan 2, 2004 · DRIP', type:'dividend', date:'2004-01-02', invested:10000, value:56000, cagr:8.7, ret:460, years:21, drip:true, note:"Warren Buffett's most famous holding. DRIP contributed 32% of total return. Buffett's KO position earns its original cost basis annually in dividends.", tags:['dividend','stock'] },
+  { id:'o-drip', ticker:'O', title:'$10,000 in Realty Income REIT', subtitle:'Jan 4, 2010 · DRIP Monthly', type:'dividend', date:'2010-01-04', invested:10000, value:38000, cagr:7.5, ret:280, years:15, drip:true, note:"Monthly dividends reinvested monthly. DRIP contributed 45% of total return — the highest of any scenario in this dataset.", tags:['dividend','stock'] },
+  { id:'latte', ticker:'SPY', title:'The Latte Factor: $5/Day', subtitle:'Jan 1, 2014 · DCA Monthly', type:'annual', date:'2014-01-01', invested:20075, value:38000, cagr:11.8, ret:89, years:11, drip:true, note:"$152/month into the S&P 500 for 11 years. $20,075 invested grew to $38,000. Cash would have stayed at $20,075.", tags:['annual','etf'] },
+  { id:'age18', ticker:'SPY', title:'$1,000/Year from Age 18', subtitle:'Jan 2, 2004 · Annual DCA', type:'annual', date:'2004-01-02', invested:21000, value:67000, cagr:12.1, ret:219, years:21, drip:true, note:"$1,000 every January for 21 years. The first investment compounded 21 years. Time advantage is irreplaceable.", tags:['annual','etf'] },
+  { id:'roth', ticker:'SPY', title:'Max Roth IRA Every Year', subtitle:'Jan 4, 2010 · Tax-Free', type:'annual', date:'2010-01-04', invested:91500, value:195000, cagr:12.4, ret:113, years:15, drip:true, note:"$91,500 contributed over 16 years → $195,000 tax-free. In a taxable account, 15-20% capital gains tax would apply on withdrawal.", tags:['annual','etf'] },
+  { id:'inf-1990', ticker:'USD', title:'$1,000 Cash Held Since 1990', subtitle:'Inflation erosion', type:'inflation', date:'1990-01-01', invested:1000, value:405, cagr:null, ret:-59.5, years:35, drip:false, note:"Cash loses ~60% of purchasing power over 35 years at 2.8% average inflation. The case for staying invested.", tags:['inflation'] },
+  { id:'inf-2020', ticker:'USD', title:'$1,000 Cash — COVID Inflation', subtitle:'Jan 2020 → Today', type:'inflation', date:'2020-01-01', invested:1000, value:821, cagr:null, ret:-17.9, years:5, drip:false, note:"Pandemic-era inflation (peaking at 7% in 2021) eroded 18% of cash purchasing power in just 5 years.", tags:['inflation'] },
+];
+
+// ── Ticker tape ───────────────────────────────────────────────────────────
+function buildTicker() {
+  const items = [
+    {t:'AMZN', r:'+204,900%'}, {t:'NVDA', r:'+10,700%'}, {t:'AAPL', r:'+4,200%'},
+    {t:'ETH',  r:'+114,900%'},{t:'TSLA', r:'+4,900%'}, {t:'GOOGL',r:'+7,700%'},
+    {t:'BTC',  r:'+14,900%'}, {t:'MSFT', r:'+1,800%'}, {t:'NFLX', r:'+2,000%'},
+    {t:'META', r:'+1,420%'},  {t:'SPY',  r:'+880%'},    {t:'QQQ',  r:'+2,400%'},
+  ];
+  const html = [...items,...items].map(i =>
+    `<span class="ticker-item"><span class="t-ticker">${i.t}</span><span class="t-return">${i.r}</span><span class="t-sep">|</span></span>`
+  ).join('');
+  document.getElementById('ticker').innerHTML = html;
+}
+
+// ── Render scenario cards ─────────────────────────────────────────────────
+function buildCards() {
+  const grid = document.getElementById('scenarios-grid');
+  grid.innerHTML = SCENARIOS.map(s => {
+    const isLoss = s.ret < 0;
+    const isCrypto = s.type === 'crypto';
+    const valClass = isLoss ? 'loss' : isCrypto ? 'crypto' : '';
+    const pillClass = isLoss ? 'loss' : isCrypto ? 'crypto' : '';
+    const retSign  = s.ret > 0 ? '+' : '';
+    const retFmt   = Math.abs(s.ret) >= 1000
+      ? retSign + (s.ret/1000).toFixed(0) + ',000%'
+      : retSign + s.ret + '%';
+
+    let valFmt;
+    if (s.value >= 1e6) valFmt = '$' + (s.value/1e6).toFixed(2).replace(/\.?0+$/,'') + 'M';
+    else if (s.value >= 1000) valFmt = '$' + s.value.toLocaleString();
+    else valFmt = '$' + s.value;
+
+    const typeLabel = {stock:'Stock',etf:'ETF',crypto:'Crypto',dividend:'Dividend',annual:'DCA / Annual',inflation:'Inflation'}[s.type]||s.type;
+
+    return `<div class="scenario-card visible" data-tags="${s.tags.join(',')}" data-type="${s.type}" onclick="loadScenario('${s.id}')">
+      <div class="sc-asset-type">${typeLabel} · ${s.ticker}</div>
+      <div class="sc-title">${s.title}</div>
+      <div class="sc-divider"></div>
+      <div class="sc-data">
+        <div class="sc-main-val">
+          <div class="sc-val-label">${s.invested >= 10000 ? '$' + (s.invested/1000).toFixed(0) + 'K' : '$1,000'} → today</div>
+          <div class="sc-val-num ${valClass}">${valFmt}</div>
+        </div>
+        <div class="sc-meta">
+          <span class="sc-pill ${pillClass}">${retFmt}</span>
+          ${s.cagr ? `<span class="sc-cagr">${s.cagr}%/yr CAGR</span>` : '<span class="sc-cagr">CPI-adjusted</span>'}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── Filter ────────────────────────────────────────────────────────────────
+function filterCards(type, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.scenario-card').forEach(card => {
+    if (type === 'all' || card.dataset.tags.includes(type) || card.dataset.type === type) {
+      card.classList.add('visible');
+    } else {
+      card.classList.remove('visible');
+    }
+  });
+}
+
+// ── Load scenario into calculator ─────────────────────────────────────────
+function loadScenario(id) {
+  const s = SCENARIOS.find(x => x.id === id);
+  if (!s) return;
+
+  // Find matching option in select
+  const sel = document.getElementById('c-asset');
+  for (let opt of sel.options) {
+    if (opt.value.startsWith(s.ticker + '|' + s.date)) {
+      sel.value = opt.value;
+      break;
+    }
+  }
+
+  document.getElementById('c-amount').value = s.invested;
+  document.getElementById('c-drip').checked = s.drip;
+  runCalc(s);
+
+  document.getElementById('calculator').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ── Main calculate function ───────────────────────────────────────────────
+function runCalc(overrideScenario) {
+  let s;
+
+  if (overrideScenario) {
+    s = overrideScenario;
+  } else {
+    const selVal = document.getElementById('c-asset').value;
+    const parts  = selVal.split('|');
+    if (parts.length < 7) return;
+
+    const [ticker, date, baseValue, cagr, ret, years, dripStr, ...titleParts] = parts;
+    const amount  = parseFloat(document.getElementById('c-amount').value) || 1000;
+    const drip    = document.getElementById('c-drip').checked;
+    const inflAdj = document.getElementById('c-inflation').checked;
+    const base    = parseFloat(baseValue);
+    const scaleFactor = amount / 1000;
+    let finalVal  = Math.round(base * scaleFactor);
+
+    if (inflAdj) {
+      const yr = parseInt(date.slice(0,4));
+      const inflMap = {1997:2.24,2000:2.25,2003:1.88,2004:1.72,2007:1.55,2009:1.48,2010:1.43,2012:1.37,2014:1.28,2015:1.27,2016:1.23,2020:1.19};
+      finalVal = Math.round(finalVal / (inflMap[yr] || 1.2));
+    }
+
+    s = {
+      ticker, date, invested: amount, value: finalVal,
+      cagr: parseFloat(cagr), ret: parseFloat(ret), years: parseInt(years),
+      drip: drip, note: titleParts.join('|'),
+      title: titleParts.join(' '),
+    };
+  }
+
+  const isLoss = s.ret < 0;
+  const d = new Date(s.date + 'T00:00:00');
+  const dFmt = d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+
+  let valStr;
+  if (s.value >= 1e6) valStr = '$' + (s.value/1e6).toFixed(2).replace(/\.?0+$/,'') + 'M';
+  else valStr = '$' + s.value.toLocaleString();
+
+  document.getElementById('r-label').textContent = `$${s.invested.toLocaleString()} in ${s.ticker} · ${dFmt}`;
+  document.getElementById('r-value').textContent  = valStr;
+  document.getElementById('r-value').className   = 'result-big' + (isLoss ? ' loss' : '');
+  document.getElementById('r-context').textContent = `would be worth today`;
+
+  const retSign = s.ret > 0 ? '+' : '';
+  const retEl  = document.getElementById('r-return');
+  retEl.textContent = retSign + s.ret.toLocaleString() + '%';
+  retEl.className   = 'r-stat-v ' + (isLoss ? 'neg' : 'pos');
+
+  const cagrEl = document.getElementById('r-cagr');
+  cagrEl.textContent = s.cagr ? s.cagr + '%/yr' : 'N/A';
+  cagrEl.className   = 'r-stat-v ' + (s.cagr > 0 ? 'pos' : '');
+
+  document.getElementById('r-years').textContent = s.years + ' yrs';
+
+  // Bar
+  const pct = Math.min((s.value / (s.invested * 100)) * 100, 100);
+  setTimeout(() => { document.getElementById('r-bar').style.width = Math.max(pct, 3) + '%'; }, 150);
+
+  // Note
+  document.getElementById('r-note').innerHTML = `<strong>📌 Note:</strong> ${s.note || 'Educational approximation. Values updated quarterly.'}`;
+
+  // CTA
+  const ctaUrl = `https://fomodejavu.com/?ticker=${s.ticker}&date=${s.date}&amount=${s.invested}`;
+  document.getElementById('r-cta').href = ctaUrl;
+
+  const result = document.getElementById('calc-result');
+  result.classList.remove('show');
+  void result.offsetWidth;
+  result.classList.add('show');
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────
+buildTicker();
+buildCards();
+
+// Run default calc
+setTimeout(() => { runCalc(); }, 300);
+</script>
+
+</body>
+</html>
