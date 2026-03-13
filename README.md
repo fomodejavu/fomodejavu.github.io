@@ -1,6 +1,6 @@
 # FomoDéjàVu — Historical Investment Calculator (GitHub Pages)
 
-> **Live site:** [fomodejavu.github.io/historical-investment-scenarios](https://fomodejavu.github.io/historical-investment-scenarios/)  
+> **Live site:** [fomodejavu.github.io/historical-investment-scenarios](https://fomodejavu.github.io/)  
 > **Full calculator:** [fomodejavu.com](https://fomodejavu.com/)
 
 ---
