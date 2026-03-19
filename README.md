@@ -1,7 +1,7 @@
 # FomoDéjàVu — Historical Investment Calculator (GitHub Pages)
 
-> **Live site:** [fomodejavu.github.io/](https://fomodejavu.github.io/)  
-> **Full calculator:** [fomodejavu.com](https://www.fomodejavu.com/calculator/)
+> **Live site:** [Fomo What If Calculator](https://fomodejavu.github.io/)  
+> **Full calculator:** [Fomo Investment Calculator](https://www.fomodejavu.com/calculator/)
 
 ---
 
